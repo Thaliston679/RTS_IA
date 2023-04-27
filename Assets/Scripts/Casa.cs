@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Casa : MonoBehaviour
 {
-    public int totalMadeira = 0;
-    public int totalComida = 0;
+    public int totalMadeira = 100;
+    public int totalComida = 500;
     public GameObject meuFazendeiro;
+    public int qtdCasas = 1;
 
     //Info
     public GameObject floresta;
@@ -15,6 +16,7 @@ public class Casa : MonoBehaviour
     
     //Relogio
     private float tempoCarne = 0;
+    private float tempoMadeira = 0;
 
     private void Start()
     {
@@ -29,11 +31,13 @@ public class Casa : MonoBehaviour
         }
 
         Consumo();
+
+        CriarCasa();
     }
 
     void CriarFazendeiro()
     {
-        if(totalComida >= 50)
+        if(totalComida >= 50 && (qtdCasas * 5) > fazendeiros.Count)
         {
             GameObject meuF = Instantiate(meuFazendeiro, transform.position, Quaternion.identity);
             meuF.GetComponent<Fazendeiro>().floresta = floresta;
@@ -41,6 +45,15 @@ public class Casa : MonoBehaviour
             meuF.GetComponent<Fazendeiro>().casa = this.gameObject;
             totalComida -= 50;
             fazendeiros.Add(meuF);
+        }
+    }
+
+    void CriarCasa()
+    {
+        if(totalMadeira > 100)
+        {
+            totalMadeira -= 100;
+            qtdCasas++;
         }
     }
 
@@ -56,6 +69,20 @@ public class Casa : MonoBehaviour
             if(totalComida < 0)
             {
                 Debug.Log("Morreu de fome!");
+                Time.timeScale = 0;
+            }
+        }
+
+        tempoMadeira += Time.deltaTime;
+
+        if (tempoMadeira > 10)
+        {
+            tempoMadeira = 0;
+            totalMadeira -= fazendeiros.Count;
+
+            if (totalMadeira < 0)
+            {
+                Debug.Log("Morreu de frio!");
                 Time.timeScale = 0;
             }
         }
