@@ -13,19 +13,13 @@ public class Fazendeiro : MonoBehaviour
     public int madeira;
     public int comida;
 
+    public enum S_tipo { Lenhador, Agricultor };
+    public S_tipo MeuTipo;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        destino = floresta;
-        int tipo = Random.Range(0, 10);
-        if(tipo < 5)
-        {
-            destino = floresta;
-        }
-        else
-        {
-            destino = carne;
-        }
+        destino = casa;
     }
 
     // Update is called once per frame
@@ -36,6 +30,19 @@ public class Fazendeiro : MonoBehaviour
         {
             MudarDestino();
         }        
+    }
+
+    public void DefinirTipo(int meuT)
+    {
+        switch (meuT)
+        {
+            case 0:
+                MeuTipo = S_tipo.Lenhador;
+                break;
+            case 1:
+                MeuTipo = S_tipo.Agricultor;
+                break;
+        }
     }
 
     void MudarDestino()
@@ -56,12 +63,12 @@ public class Fazendeiro : MonoBehaviour
             casa.GetComponent<Casa>().totalComida += comida;
             madeira = 0;
             comida = 0;
-            int tipo = Random.Range(0, 10);
-            if (tipo < 5)
+
+            if(MeuTipo == S_tipo.Lenhador)
             {
                 destino = floresta;
             }
-            else
+            if (MeuTipo == S_tipo.Agricultor)
             {
                 destino = carne;
             }

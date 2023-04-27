@@ -20,14 +20,21 @@ public class Casa : MonoBehaviour
 
     private void Start()
     {
-        
+        for(int i = 0; i < 3; i++)
+        {
+            CriarFazendeiro(0);
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            CriarFazendeiro(1);
+        }
     }
 
     private void Update()
     {
         if(totalComida >= 250)
         {
-            CriarFazendeiro();
+            CriarFazendeiro(Random.Range(0,1));
         }
 
         Consumo();
@@ -35,7 +42,7 @@ public class Casa : MonoBehaviour
         CriarCasa();
     }
 
-    void CriarFazendeiro()
+    void CriarFazendeiro(int escolheTipo)
     {
         if(totalComida >= 50 && (qtdCasas * 5) > fazendeiros.Count)
         {
@@ -45,6 +52,7 @@ public class Casa : MonoBehaviour
             meuF.GetComponent<Fazendeiro>().casa = this.gameObject;
             totalComida -= 50;
             fazendeiros.Add(meuF);
+            meuF.GetComponent<Fazendeiro>().DefinirTipo(escolheTipo);
         }
     }
 
