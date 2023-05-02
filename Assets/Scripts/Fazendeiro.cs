@@ -10,14 +10,26 @@ public class Fazendeiro : MonoBehaviour
     public GameObject casa;
     public GameObject floresta;
     public GameObject carne;
+    public GameObject lazer;
     public int madeira;
     public int comida;
+    public bool loteria = false;
 
-    public enum S_tipo { Lenhador, Agricultor };
+    public enum S_tipo { Lenhador, Agricultor, Maraja };
     public S_tipo MeuTipo;
+
+    private float tempoLazer = 0;
+
+    //Controle
+    public float irParaDestino = 0;
+    public bool andando = true;
+    //Agricultor = 7.721033
+    //Lenhador = 11.43567
+    //Maraja = 3.824313
 
     void Start()
     {
+        andando = true;
         agent = GetComponent<NavMeshAgent>();
         destino = casa;
     }
@@ -25,23 +37,38 @@ public class Fazendeiro : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(destino.transform.position);
-        if(Vector3.Distance(transform.position, destino.transform.position) < 4)
+        if (loteria)
         {
-            MudarDestino();
-        }        
+            AvisarCasaVidaBoa();
+        }
+        else
+        {
+            agent.SetDestination(destino.transform.position);
+            if (Vector3.Distance(transform.position, destino.transform.position) < 4)
+            {
+                MudarDestino();
+            }
+        }
+
+        if (andando) irParaDestino += Time.deltaTime;
     }
 
     public void DefinirTipo(int meuT)
     {
-        switch (meuT)
+        if (!loteria)
         {
-            case 0:
-                MeuTipo = S_tipo.Lenhador;
-                break;
-            case 1:
-                MeuTipo = S_tipo.Agricultor;
-                break;
+            switch (meuT)
+            {
+                case 0:
+                    MeuTipo = S_tipo.Lenhador;
+                    break;
+                case 1:
+                    MeuTipo = S_tipo.Agricultor;
+                    break;
+                case 2:
+                    MeuTipo = S_tipo.Maraja;
+                    break;
+            }
         }
     }
 
@@ -51,11 +78,19 @@ public class Fazendeiro : MonoBehaviour
         {
             destino = casa;
             madeira = 10;
+            andando = false;
         }
         else if (destino == carne)
         {
             destino = casa;
             comida = 10;
+            andando = false;
+        }
+        else if (destino == lazer)
+        {
+            destino = casa;
+            loteria = true;
+            andando = false;
         }
         else if (destino == casa)
         {
@@ -63,6 +98,8 @@ public class Fazendeiro : MonoBehaviour
             casa.GetComponent<Casa>().totalComida += comida;
             madeira = 0;
             comida = 0;
+
+            VerificaProfissao();
 
             if(MeuTipo == S_tipo.Lenhador)
             {
@@ -72,6 +109,25 @@ public class Fazendeiro : MonoBehaviour
             {
                 destino = carne;
             }
+            if (MeuTipo == S_tipo.Maraja)
+            {
+                destino = lazer;
+            }
         }
+    }
+
+    void AvisarCasaVidaBoa()
+    {
+        tempoLazer += Time.deltaTime;
+        if (tempoLazer >= 10)
+        {
+            tempoLazer = 0;
+            casa.GetComponent<Casa>().ReceberAvisoMaraja();
+        }
+    }
+
+    void VerificaProfissao()
+    {
+
     }
 }

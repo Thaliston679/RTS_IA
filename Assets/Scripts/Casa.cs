@@ -8,10 +8,12 @@ public class Casa : MonoBehaviour
     public int totalComida = 500;
     public GameObject meuFazendeiro;
     public int qtdCasas = 1;
+    public int totalVidaBoa = 0;
 
     //Info
     public GameObject floresta;
     public GameObject carne;
+    public GameObject lazer;
     public List<GameObject> fazendeiros;
     
     //Relogio
@@ -20,7 +22,7 @@ public class Casa : MonoBehaviour
 
     private void Start()
     {
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < 2; i++)
         {
             CriarFazendeiro(0);
         }
@@ -28,6 +30,7 @@ public class Casa : MonoBehaviour
         {
             CriarFazendeiro(1);
         }
+        CriarFazendeiro(2);
     }
 
     private void Update()
@@ -49,6 +52,7 @@ public class Casa : MonoBehaviour
             GameObject meuF = Instantiate(meuFazendeiro, transform.position, Quaternion.identity);
             meuF.GetComponent<Fazendeiro>().floresta = floresta;
             meuF.GetComponent<Fazendeiro>().carne = carne;
+            meuF.GetComponent<Fazendeiro>().lazer = lazer;
             meuF.GetComponent<Fazendeiro>().casa = this.gameObject;
             totalComida -= 50;
             fazendeiros.Add(meuF);
@@ -94,5 +98,15 @@ public class Casa : MonoBehaviour
                 Time.timeScale = 0;
             }
         }
+    }
+
+    public void ReceberAvisoMaraja()
+    {
+        totalVidaBoa++;
+    }
+
+    public void SetTimeScale(float value)
+    {
+        Time.timeScale = value;
     }
 }
