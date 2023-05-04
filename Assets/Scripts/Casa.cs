@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Casa : MonoBehaviour
 {
@@ -22,10 +23,17 @@ public class Casa : MonoBehaviour
 
     //Controle
     int ultimoTipoCriado = 0;
+    [SerializeField] private int[] profissoes;
+
+    //UI
+    public TextMeshProUGUI infoUI;
 
     private void Start()
     {
-        for(int i = 0; i < 2; i++)
+        AlterarPosicaoComida();
+        AlterarPosicaoMadeira();
+        AlterarPosicaoLazer();
+        for (int i = 0; i < 2; i++)
         {
             CriarFazendeiro(0);
         }
@@ -48,6 +56,11 @@ public class Casa : MonoBehaviour
         CriarCasa();
     }
 
+    private void LateUpdate()
+    {
+        infoUI.text = $"Comida: {totalComida}\nMadeira: {totalMadeira}\nCasas: {qtdCasas}\nPopulação: {fazendeiros.Count}\nL: {profissoes[0]} | A: {profissoes[1]} | M: {profissoes[2]}\nFelicidade: {totalVidaBoa}";
+    }
+
     void CriarFazendeiro(int escolheTipo)
     {
         if(totalComida >= 50 && (qtdCasas * 5) > fazendeiros.Count)
@@ -62,6 +75,7 @@ public class Casa : MonoBehaviour
             fazendeiros.Add(meuF);
             fazendeiro.DefinirTipo(escolheTipo);
             fazendeiro.meuTipo = escolheTipo;
+            profissoes[escolheTipo]++;
         }
     }
 
@@ -132,7 +146,7 @@ public class Casa : MonoBehaviour
             tipo = 1;
         }
 
-        if (totalComida > fazendeiros.Count * 20 && totalMadeira > fazendeiros.Count * 20 && ultimoTipoCriado != 2)
+        if (totalComida > fazendeiros.Count * 10 && totalMadeira > fazendeiros.Count * 10 && ultimoTipoCriado != 2)
         {
             tipo = 2;
         }
@@ -154,7 +168,7 @@ public class Casa : MonoBehaviour
                 Debug.Log("Crise de Madeira");
             }
         }
-        if (totalMadeira > fazendeiros.Count * 30 && !crise)
+        if (totalMadeira > fazendeiros.Count * 30 && !crise && totalMadeira > totalComida)
         {
             if (value == 0)
             {
@@ -164,7 +178,7 @@ public class Casa : MonoBehaviour
         }
 
 
-        if (totalComida < fazendeiros.Count * 10)
+        if (totalComida < fazendeiros.Count * 5)
         {
             if (value == 0)
             {
@@ -173,7 +187,7 @@ public class Casa : MonoBehaviour
                 Debug.Log("Crise de Comida");
             }
         }
-        if (totalComida > fazendeiros.Count * 30 && !crise)
+        if (totalComida > fazendeiros.Count * 30 && !crise && totalComida > totalMadeira)
         {
             if (value == 1)
             {
@@ -183,5 +197,47 @@ public class Casa : MonoBehaviour
         }
 
         return tipo;
+    }
+
+    void AlterarPosicaoComida()
+    {
+        float posX = Random.Range(10, 40);
+        float posZ = Random.Range(10, 40);
+        int sentido = Random.Range(1, 10);
+
+        if(sentido > 5)
+        {
+            posX *= -1;
+        }
+
+        carne.transform.position = new(posX, 0, posZ);
+    }
+
+    void AlterarPosicaoMadeira()
+    {
+        float posX = Random.Range(10, 40);
+        float posZ = Random.Range(10, 40);
+        int sentido = Random.Range(1, 10);
+
+        if (sentido > 5)
+        {
+            posZ *= -1;
+        }
+
+        floresta.transform.position = new(posX, 0, posZ);
+    }
+
+    void AlterarPosicaoLazer()
+    {
+        float posX = Random.Range(10, 40);
+        float posZ = Random.Range(10, 40);
+        int sentido = Random.Range(1, 10);
+
+        if (sentido > 5)
+        {
+            posX *= -1;
+        }
+
+        lazer.transform.position = new(posX, 0, posZ);
     }
 }
