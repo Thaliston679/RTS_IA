@@ -37,7 +37,7 @@ public class Casa : MonoBehaviour
     {
         if(totalComida >= 250)
         {
-            CriarFazendeiro(Random.Range(0,1));
+            CriarFazendeiro(VerificarNecessidade(Random.Range(0, 1)));
         }
 
         Consumo();
@@ -62,7 +62,7 @@ public class Casa : MonoBehaviour
 
     void CriarCasa()
     {
-        if(totalMadeira > 100)
+        if(totalMadeira > 250 && fazendeiros.Count == (qtdCasas * 5))
         {
             totalMadeira -= 100;
             qtdCasas++;
@@ -108,5 +108,44 @@ public class Casa : MonoBehaviour
     public void SetTimeScale(float value)
     {
         Time.timeScale = value;
+    }
+
+    public int VerificarNecessidade(int value)
+    {
+        int tipo = value;
+
+        if (totalMadeira < totalComida * 1.5f)
+        {
+            tipo = 0;
+        }
+
+        if (totalComida < totalMadeira * 1.5f)
+        {
+            tipo = 1;
+        }
+
+        if (totalComida > fazendeiros.Count * 20 && totalMadeira > fazendeiros.Count * 20)
+        {
+            tipo = 2;
+        }
+
+        return tipo;
+    }
+
+    public int ControleDeCrise(int value)
+    {
+        int tipo = value;
+
+        if (totalMadeira < fazendeiros.Count * 5)
+        {
+            tipo = 0;
+        }
+
+        if (totalComida < fazendeiros.Count * 10)
+        {
+            tipo = 1;
+        }
+
+        return tipo;
     }
 }
