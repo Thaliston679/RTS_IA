@@ -20,6 +20,9 @@ public class Casa : MonoBehaviour
     private float tempoCarne = 0;
     private float tempoMadeira = 0;
 
+    //Controle
+    int ultimoTipoCriado = 0;
+
     private void Start()
     {
         for(int i = 0; i < 2; i++)
@@ -35,7 +38,7 @@ public class Casa : MonoBehaviour
 
     private void Update()
     {
-        if(totalComida >= 250)
+        if(totalComida >= 250 + fazendeiros.Count * 2)
         {
             CriarFazendeiro(VerificarNecessidade(Random.Range(0, 1)));
         }
@@ -50,13 +53,15 @@ public class Casa : MonoBehaviour
         if(totalComida >= 50 && (qtdCasas * 5) > fazendeiros.Count)
         {
             GameObject meuF = Instantiate(meuFazendeiro, transform.position, Quaternion.identity);
-            meuF.GetComponent<Fazendeiro>().floresta = floresta;
-            meuF.GetComponent<Fazendeiro>().carne = carne;
-            meuF.GetComponent<Fazendeiro>().lazer = lazer;
-            meuF.GetComponent<Fazendeiro>().casa = this.gameObject;
+            Fazendeiro fazendeiro = meuF.GetComponent<Fazendeiro>();
+            fazendeiro.floresta = floresta;
+            fazendeiro.carne = carne;
+            fazendeiro.lazer = lazer;
+            fazendeiro.casa = this.gameObject;
             totalComida -= 50;
             fazendeiros.Add(meuF);
-            meuF.GetComponent<Fazendeiro>().DefinirTipo(escolheTipo);
+            fazendeiro.DefinirTipo(escolheTipo);
+            fazendeiro.meuTipo = escolheTipo;
         }
     }
 
@@ -107,7 +112,10 @@ public class Casa : MonoBehaviour
 
     public void SetTimeScale(float value)
     {
-        Time.timeScale = value;
+        if(Time.timeScale != 0)
+        {
+            Time.timeScale = value;
+        }
     }
 
     public int VerificarNecessidade(int value)
@@ -124,26 +132,54 @@ public class Casa : MonoBehaviour
             tipo = 1;
         }
 
-        if (totalComida > fazendeiros.Count * 20 && totalMadeira > fazendeiros.Count * 20)
+        if (totalComida > fazendeiros.Count * 20 && totalMadeira > fazendeiros.Count * 20 && ultimoTipoCriado != 2)
         {
             tipo = 2;
         }
-
+        ultimoTipoCriado = tipo;
         return tipo;
     }
 
     public int ControleDeCrise(int value)
     {
         int tipo = value;
+        bool crise = false;
 
         if (totalMadeira < fazendeiros.Count * 5)
         {
-            tipo = 0;
+            if(value == 1)
+            {
+                tipo = 0;
+                crise = true;
+                Debug.Log("Crise de Madeira");
+            }
         }
+        if (totalMadeira > fazendeiros.Count * 30 && !crise)
+        {
+            if (value == 0)
+            {
+                tipo = 1;
+                Debug.Log("Abundância de Madeira");
+            }
+        }
+
 
         if (totalComida < fazendeiros.Count * 10)
         {
-            tipo = 1;
+            if (value == 0)
+            {
+                tipo = 1;
+                crise = true;
+                Debug.Log("Crise de Comida");
+            }
+        }
+        if (totalComida > fazendeiros.Count * 30 && !crise)
+        {
+            if (value == 1)
+            {
+                tipo = 0;
+                Debug.Log("Abundância de Comida");
+            }
         }
 
         return tipo;

@@ -26,7 +26,7 @@ public class Fazendeiro : MonoBehaviour
     //Agricultor = 7.721033
     //Lenhador = 11.43567
     //Maraja = 3.824313
-    int meuTipo;
+    public int meuTipo;
 
     void Start()
     {
@@ -71,7 +71,6 @@ public class Fazendeiro : MonoBehaviour
                     break;
             }
         }
-        meuTipo = meuT;
     }
 
     void MudarDestino()
@@ -130,8 +129,6 @@ public class Fazendeiro : MonoBehaviour
 
     void VerificaProfissao()
     {
-        //int qtdPessoas = casa.GetComponent<Casa>().fazendeiros.Count;
-        //if(qtdPessoas*10 )
-        DefinirTipo(casa.GetComponent<Casa>().ControleDeCrise(meuTipo));
+        if(meuTipo != 2) DefinirTipo(casa.GetComponent<Casa>().ControleDeCrise(meuTipo));
     }
 }
