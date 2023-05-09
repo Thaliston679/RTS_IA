@@ -10,6 +10,8 @@ public class Casa : MonoBehaviour
     public GameObject meuFazendeiro;
     public int qtdCasas = 1;
     public int totalVidaBoa = 0;
+    [HideInInspector] public float gameTime;
+    [HideInInspector] public string gameTimeText;
 
     //Info
     public GameObject floresta;
@@ -23,7 +25,7 @@ public class Casa : MonoBehaviour
 
     //Controle
     int ultimoTipoCriado = 0;
-    [SerializeField] private int[] profissoes;
+    public int[] profissoes;
 
     //UI
     public TextMeshProUGUI infoUI;
@@ -54,11 +56,17 @@ public class Casa : MonoBehaviour
         Consumo();
 
         CriarCasa();
+
+        gameTime += Time.deltaTime * 1000f;
     }
 
     private void LateUpdate()
     {
-        infoUI.text = $"Comida: {totalComida}\nMadeira: {totalMadeira}\nCasas: {qtdCasas}\nPopulação: {fazendeiros.Count}\nL: {profissoes[0]} | A: {profissoes[1]} | M: {profissoes[2]}\nFelicidade: {totalVidaBoa}";
+        int minutes = (int)(gameTime / 60000);
+        int seconds = (int)((gameTime / 1000) % 60);
+        gameTimeText = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        //infoUI.text = $"Comida: {totalComida}\nMadeira: {totalMadeira}\nCasas: {qtdCasas}\nPopulação: {fazendeiros.Count}\nL: {profissoes[0]} | A: {profissoes[1]} | M: {profissoes[2]}\nFelicidade: {totalVidaBoa}\nTempo: {gameTime}";
     }
 
     void CriarFazendeiro(int escolheTipo)
