@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,19 +6,26 @@ using TMPro;
 
 public class Visualizador : MonoBehaviour
 {
-    public TextMeshProUGUI infoUI;
+    public TMP_Text populacao;
+    public TMP_Text comida;
+    public TMP_Text madeira;
+    public TMP_Text barraDeouro;
+    public TMP_Text lazer;
+    public TMP_Text tipo;
+    public TMP_Text tempo;
+    //Onde Eu pego as informaÃ§Ãµes
+    public Casa MinhaCasa;
+    public Gerenciador MeuGerenciador;
 
-    //Onde pego as informações
-    public Casa minhaCasa;
-
-    void Start()
+    // Update is called once per frame
+    void Update()
     {
-
-    }
-
-
-    void LateUpdate()
-    {
-        infoUI.text = $"Comida: {minhaCasa.totalComida}\nMadeira: {minhaCasa.totalMadeira}\nCasas: {minhaCasa.qtdCasas}\nPopulação: {minhaCasa.fazendeiros.Count} / {minhaCasa.qtdCasas*5}\nL: {minhaCasa.profissoes[0]} | A: {minhaCasa.profissoes[1]} | M: {minhaCasa.profissoes[2]}\nFelicidade: {minhaCasa.totalVidaBoa}\nTempo: {minhaCasa.gameTimeText}";
+        populacao.text = "PopulaÃ§Ã£o: " + MinhaCasa.Fazendeiros.Count + "/" + (MinhaCasa.QtdCasas * 5);
+        comida.text = "Comida: " + MinhaCasa.TotalComida;
+        madeira.text = "Madeira: " + MinhaCasa.TotalMadeira;
+        barraDeouro.text = "Ouro: " + MinhaCasa.TotalbarraDeouro;
+        lazer.text = "Lazer: " + MinhaCasa.TotalVidaBoa;
+        tipo.text = "M:" + MinhaCasa.trabalhadorMadeira + "//C:" + MinhaCasa.trabalhadorCarne + "//VB: " + MinhaCasa.trabalhadorVidaboa+ "//MI: "+MinhaCasa.trabralhadorMineiro;
+        tempo.text ="Tempo: "+MeuGerenciador.tempo+"seg"; 
     }
 }

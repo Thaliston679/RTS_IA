@@ -5,130 +5,167 @@ using UnityEngine.AI;
 
 public class Fazendeiro : MonoBehaviour
 {
-    private NavMeshAgent agent;
-    public GameObject destino;
-    public GameObject casa;
-    public GameObject floresta;
-    public GameObject carne;
-    public GameObject lazer;
+    private NavMeshAgent Agente;
+    public GameObject Destino;
+    public GameObject Casa;
+    public GameObject Floresta;
+    public GameObject Carne;
+    public GameObject Lazer;
+    public GameObject Ouro;
+
     public int madeira;
     public int comida;
+    public int barraDeouro;
     public bool loteria = false;
+    private int LimiteCarga = 10;
+    private int nivel = 0;
 
-    public enum S_tipo { Lenhador, Agricultor, Maraja };
+    public enum S_tipo { Lenhador, Agricultor, Minerador, Maraja };
     public S_tipo MeuTipo;
 
     private float tempoLazer = 0;
 
-    //Controle
-    public float irParaDestino = 0;
-    public bool andando = true;
-    //Agricultor = 7.721033
-    //Lenhador = 11.43567
-    //Maraja = 3.824313
-    public int meuTipo;
-
     void Start()
     {
-        andando = true;
-        agent = GetComponent<NavMeshAgent>();
-        destino = casa;
+        Agente = GetComponent<NavMeshAgent>();
+        Destino = Casa;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DefinirFuncao(int meuT)
     {
-        if (loteria)
-        {
-            AvisarCasaVidaBoa();
-        }
-        else
-        {
-            agent.SetDestination(destino.transform.position);
-            if (Vector3.Distance(transform.position, destino.transform.position) < 4)
-            {
-                MudarDestino();
-            }
-        }
-
-        if (andando) irParaDestino += Time.deltaTime;
-    }
-
-    public void DefinirTipo(int meuT)
-    {
-        if (!loteria)
+        if (loteria == false)
         {
             switch (meuT)
             {
                 case 0:
+                    //Coleta Madeira
                     MeuTipo = S_tipo.Lenhador;
                     break;
                 case 1:
+                    //Coleta Comida
                     MeuTipo = S_tipo.Agricultor;
                     break;
                 case 2:
                     MeuTipo = S_tipo.Maraja;
                     break;
+                case 3:
+                    MeuTipo = S_tipo.Minerador;
+                    break;
             }
         }
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        if (loteria == true)
+        {
+            AvisarCasa();
+        }
+        else
+        {
+            Agente.SetDestination(Destino.transform.position);
+            if (Vector3.Distance(transform.position, Destino.transform.position) < 4)
+            {
+                MudarDestino();
+            }
+        }
+
+    }
+
+    public void AumentaNivel(int novoNivel)
+    {
+        nivel = novoNivel;
+    }
+    public int RetornaNivel()
+    {
+        return nivel;
+    }
     void MudarDestino()
     {
-        if (destino == floresta)
+        int carregando = LimiteCarga + (nivel * 2);
+        if (Destino == Floresta)
         {
-            destino = casa;
-            madeira = 10;
-            andando = false;
+            madeira = carregando;
+            Destino = Casa;
+
         }
-        else if (destino == carne)
+        else if (Destino == Ouro)
         {
-            destino = casa;
-            comida = 10;
-            andando = false;
+            barraDeouro = carregando;
+            Destino = Casa;
+
         }
-        else if (destino == lazer)
+        else if (Destino == Carne)
         {
-            destino = casa;
-            loteria = true;
-            andando = false;
+            comida = carregando;
+            Destino = Casa;
         }
-        else if (destino == casa)
+        else if (Destino == Casa)
         {
-            casa.GetComponent<Casa>().totalMadeira += madeira;
-            casa.GetComponent<Casa>().totalComida += comida;
+            Casa.GetComponent<Casa>().TotalMadeira += madeira;
+            Casa.GetComponent<Casa>().TotalComida += comida;
+            Casa.GetComponent<Casa>().TotalbarraDeouro += barraDeouro;
             madeira = 0;
             comida = 0;
-
-            VerificaProfissao();
-
-            if(MeuTipo == S_tipo.Lenhador)
+            barraDeouro = 0;
+            if (MeuTipo == S_tipo.Lenhador)
             {
-                destino = floresta;
+                Destino = Floresta;
             }
             if (MeuTipo == S_tipo.Agricultor)
             {
-                destino = carne;
+                Destino = Carne;
+            }
+            if (MeuTipo == S_tipo.Minerador)
+            {
+                Destino = Ouro;
             }
             if (MeuTipo == S_tipo.Maraja)
             {
-                destino = lazer;
+                Destino = Lazer;
             }
         }
+        else if (Destino == Lazer)
+        {
+            //Agora só vive como maraja;
+            loteria = true;
+        }
+
     }
 
-    void AvisarCasaVidaBoa()
+
+    void AvisarCasa()
     {
         tempoLazer += Time.deltaTime;
         if (tempoLazer >= 10)
         {
+            Casa.GetComponent<Casa>().ReceberAvisoMaraja();
             tempoLazer = 0;
-            casa.GetComponent<Casa>().ReceberAvisoMaraja();
         }
     }
 
-    void VerificaProfissao()
+    public int InformaTipo()
     {
-        if(meuTipo != 2) DefinirTipo(casa.GetComponent<Casa>().ControleDeCrise(meuTipo));
+        if (MeuTipo == S_tipo.Lenhador)
+        {
+            return 0;
+        }
+        else if (MeuTipo == S_tipo.Agricultor)
+        {
+            return 1;
+        }
+        else if (MeuTipo == S_tipo.Maraja)
+        {
+            return 2;
+        }
+        else if (MeuTipo == S_tipo.Minerador)
+        {
+            return 3;
+        }
+        else
+        {
+            return -1;
+        }
     }
 }
