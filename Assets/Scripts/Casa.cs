@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Casa : MonoBehaviour
 {
@@ -32,10 +33,15 @@ public class Casa : MonoBehaviour
     public GameObject Lazer;
     public GameObject Ouro;
 
+    //Teste
+    public float tempo5min = 0;
+
     private void Start()
     {
+        Time.timeScale = 5;
         AlterarPosicaoFloresta();
         AlterarPosicaoCarne();
+        AlterarPosicaoOuro();
 
         //0 - madeira
         CriarFazendeiro(0);
@@ -62,12 +68,20 @@ public class Casa : MonoBehaviour
 
         Consumo();
         AtualizarFazendeiros();
+
+        tempo5min += Time.deltaTime;
+        if(tempo5min > 300)
+        {
+            tempo5min = 0;
+            Debug.Log(TotalVidaBoa);
+            SceneManager.LoadScene(0);
+        }
     }
 
     void Thaliston()
     {
         //Cria casa
-        if (TotalMadeira > 150 + (Fazendeiros.Count*5) && Fazendeiros.Count == (QtdCasas * 5))
+        if (TotalMadeira > 125/*150 safe*/ + (Fazendeiros.Count*5) && Fazendeiros.Count == (QtdCasas * 5))
         {
             TotalMadeira -= 100;
             QtdCasas++;
@@ -86,11 +100,11 @@ public class Casa : MonoBehaviour
                 //Cria Trabalhador Maraja
                 tipo = 2;
             }
-            if (TotalMadeira >= TotalComida && trabralhadorMineiro <= trabalhadorMadeira)
+            if (TotalMadeira >= TotalComida && trabralhadorMineiro <= (Fazendeiros.Count * 0.2f) && tipo != 2)
             {
                 Debug.Log("Abundancia de madeira");
                 //Abundancia de madeira
-                //Cria Trabalhador Mineirador
+                //Cria Trabalhador Minerador
                 tipo = 3;
             }
 
@@ -101,7 +115,7 @@ public class Casa : MonoBehaviour
                 //Cria Trabalhador Carne
                 tipo = 1;
             }
-            else if (TotalMadeira < (Fazendeiros.Count * 3) + 50)
+            else if (TotalMadeira < (Fazendeiros.Count * 3) + 50 && trabalhadorMadeira <= (Fazendeiros.Count * 0.3f))
             {
                 Debug.Log("Crise de madeira");
                 //Crise de madeira
@@ -111,6 +125,68 @@ public class Casa : MonoBehaviour
 
             CriarFazendeiro(tipo);
         }
+
+        ThalistonControleCrise();
+    }
+
+    void ThalistonControleCrise()
+    {
+        ///Executar no MudarDestino do Fazendeiro--
+        //Muda profissão em crise/abundancia
+
+        // Muita madeira
+        //pouca carne = de madeira pra carne
+        if (TotalComida < (Fazendeiros.Count * 2) + 75 && TotalMadeira > (TotalComida * 2) + 100)
+        {
+            for (int i = 0; i < Fazendeiros.Count; i++)
+            {
+                if (Fazendeiros[i].GetComponent<Fazendeiro>().InformaTipo() == 0 && trabalhadorMadeira > (Fazendeiros.Count * 0.3f))
+                {
+                    int sort = Random.Range(0, 5);
+                    if (sort == 0) Fazendeiros[i].GetComponent<Fazendeiro>().DefinirFuncao(1);
+                }
+                DescobreTipos();
+            }
+        }
+
+        //Muita carne
+        //pouca madeira = de carne pra madeira
+        if (TotalMadeira < (Fazendeiros.Count * 2) + 75 && TotalComida > (TotalMadeira * 2) + 100)
+        {
+            for (int i = 0; i < Fazendeiros.Count; i++)
+            {
+                if (Fazendeiros[i].GetComponent<Fazendeiro>().InformaTipo() == 1 && trabalhadorCarne > (Fazendeiros.Count * 0.3f))
+                {
+                    int sort = Random.Range(0, 5);
+                    if (sort == 0) Fazendeiros[i].GetComponent<Fazendeiro>().DefinirFuncao(0);
+                }
+                DescobreTipos();
+            }
+        }
+
+        //Muita carne e comida
+        //De carne/madeira pra maraja
+        if (TotalComida > (Fazendeiros.Count * 3) + 200 && TotalMadeira > (Fazendeiros.Count * 3) + 125)
+        {
+            for (int i = 0; i < Fazendeiros.Count; i++)
+            {
+                if (trabalhadorCarne > (Fazendeiros.Count * 0.3f) && trabalhadorMadeira > (Fazendeiros.Count * 0.3f))
+                {
+                    if (Fazendeiros[i].GetComponent<Fazendeiro>().InformaTipo() == 1)
+                    {
+                        int sort = Random.Range(0, 5);
+                        if (sort == 0) Fazendeiros[i].GetComponent<Fazendeiro>().DefinirFuncao(2);
+                    }
+                    if (Fazendeiros[i].GetComponent<Fazendeiro>().InformaTipo() == 0)
+                    {
+                        int sort = Random.Range(0, 5);
+                        if (sort == 0) Fazendeiros[i].GetComponent<Fazendeiro>().DefinirFuncao(2);
+                    }
+                }
+                DescobreTipos();
+            }
+        }
+        ///--
     }
 
     void CriarFazendeiro(int escolhetipo)
@@ -204,6 +280,25 @@ public class Casa : MonoBehaviour
         }
 
         Carne.transform.position = new Vector3(posX, 0, posZ);
+    }
+
+    void AlterarPosicaoOuro()
+    {
+        float posX = Random.Range(10, 40);
+        float posZ = Random.Range(10, 40);
+        int sentido = Random.Range(1, 10);
+        if (sentido > 5)
+        {
+            //muda
+            posZ = posZ * -1;
+        }
+        else
+        {
+            //não muda
+            //posX = posX;
+        }
+
+        Ouro.transform.position = new Vector3(posX, 0, posZ);
     }
 
 
