@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Casa : MonoBehaviour
 {
@@ -33,12 +32,8 @@ public class Casa : MonoBehaviour
     public GameObject Lazer;
     public GameObject Ouro;
 
-    //Teste
-    public float tempo5min = 0;
-
     private void Start()
     {
-        Time.timeScale = 5;
         AlterarPosicaoFloresta();
         AlterarPosicaoCarne();
         AlterarPosicaoOuro();
@@ -68,14 +63,6 @@ public class Casa : MonoBehaviour
 
         Consumo();
         AtualizarFazendeiros();
-
-        tempo5min += Time.deltaTime;
-        if(tempo5min > 300)
-        {
-            tempo5min = 0;
-            Debug.Log(TotalVidaBoa);
-            SceneManager.LoadScene(0);
-        }
     }
 
     void Thaliston()
