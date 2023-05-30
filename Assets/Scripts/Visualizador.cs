@@ -6,26 +6,14 @@ using TMPro;
 
 public class Visualizador : MonoBehaviour
 {
-    public TMP_Text populacao;
-    public TMP_Text comida;
-    public TMP_Text madeira;
-    public TMP_Text barraDeouro;
-    public TMP_Text lazer;
-    public TMP_Text tipo;
-    public TMP_Text tempo;
-    //Onde Eu pego as informações
-    public Casa MinhaCasa;
-    public Gerenciador MeuGerenciador;
+    public TextMeshProUGUI infoUI;
 
-    // Update is called once per frame
-    void Update()
+    //Onde pego as informações
+    public Casa minhaCasa;
+    public Gerenciador gerenciador;
+
+    void LateUpdate()
     {
-        populacao.text = "População: " + MinhaCasa.Fazendeiros.Count + "/" + (MinhaCasa.QtdCasas * 5);
-        comida.text = "Comida: " + MinhaCasa.TotalComida;
-        madeira.text = "Madeira: " + MinhaCasa.TotalMadeira;
-        barraDeouro.text = "Ouro: " + MinhaCasa.TotalbarraDeouro;
-        lazer.text = "Lazer: " + MinhaCasa.TotalVidaBoa;
-        tipo.text = "M:" + MinhaCasa.trabalhadorMadeira + "//C:" + MinhaCasa.trabalhadorCarne + "//VB: " + MinhaCasa.trabalhadorVidaboa+ "//MI: "+MinhaCasa.trabralhadorMineiro;
-        tempo.text ="Tempo: "+MeuGerenciador.tempo+"seg"; 
+        infoUI.text = $"População: {minhaCasa.Fazendeiros.Count} / {minhaCasa.QtdCasas * 5}\nComida: {minhaCasa.TotalComida}\nMadeira: {minhaCasa.TotalMadeira}\nOuro: {minhaCasa.TotalbarraDeouro}\nFelicidade: {minhaCasa.TotalVidaBoa}\nMa: {minhaCasa.trabalhadorMadeira} | Ca: {minhaCasa.trabalhadorCarne} | VB: {minhaCasa.trabalhadorVidaboa} | Mi: {minhaCasa.trabralhadorMineiro}\nTempo: {gerenciador.gameTimeText}";
     }
 }

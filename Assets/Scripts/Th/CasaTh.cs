@@ -56,11 +56,11 @@ public class CasaTh : MonoBehaviour
             CriarFazendeiro(VerificarNecessidade(Random.Range(0, 4)));
         }
 
-        Consumo();
-
         CriarCasa();
 
         gameTime += Time.deltaTime * 1000f;
+
+        Consumo();
     }
 
     private void LateUpdate()
@@ -77,7 +77,7 @@ public class CasaTh : MonoBehaviour
         if(totalComida >= 50 && (qtdCasas * 5) > fazendeiros.Count)
         {
             GameObject meuF = Instantiate(meuFazendeiro, transform.position, Quaternion.identity);
-            Fazendeiro fazendeiro = meuF.GetComponent<Fazendeiro>();
+            FazendeiroTh fazendeiro = meuF.GetComponent<FazendeiroTh>();
             fazendeiro.floresta = floresta;
             fazendeiro.carne = carne;
             fazendeiro.lazer = lazer;

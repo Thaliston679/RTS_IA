@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Gerenciador : MonoBehaviour
 {
-    public float tempo = 300;
-    public float meuRelogio;
-    // Update is called once per frame
+    public string gameTimeText;
+    private float gameTime = 0;
+
     void Update()
     {
         Relogio();
@@ -14,11 +14,9 @@ public class Gerenciador : MonoBehaviour
 
     void Relogio()
     {
-        meuRelogio += Time.deltaTime;
-        if (meuRelogio > 1)
-        {
-            meuRelogio = 0;
-            tempo--;
-        }
+        gameTime += Time.deltaTime * 1000f;
+        int minutes = (int)(gameTime / 60000);
+        int seconds = (int)((gameTime / 1000) % 60);
+        gameTimeText = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }

@@ -119,9 +119,9 @@ public class FazendeiroTh : MonoBehaviour
         }
         else if (destino == casa)
         {
-            casa.GetComponent<Casa>().totalMadeira += madeira;
-            casa.GetComponent<Casa>().totalComida += comida;
-            casa.GetComponent<Casa>().totalOuro += ouro;
+            casa.GetComponent<CasaTh>().totalMadeira += madeira;
+            casa.GetComponent<CasaTh>().totalComida += comida;
+            casa.GetComponent<CasaTh>().totalOuro += ouro;
             madeira = 0;
             comida = 0;
             ouro = 0;
@@ -159,6 +159,6 @@ public class FazendeiroTh : MonoBehaviour
 
     void VerificaProfissao()
     {
-        if(meuTipo != 2 && meuTipo != 3) DefinirTipo(casa.GetComponent<Casa>().ControleDeCrise(meuTipo));
+        if(meuTipo != 2 && meuTipo != 3) DefinirTipo(casa.GetComponent<CasaTh>().ControleDeCrise(meuTipo));
     }
 }

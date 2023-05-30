@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -488,6 +488,7 @@ GameObject:
   - component: {fileID: 199641773}
   - component: {fileID: 199641772}
   - component: {fileID: 199641776}
+  - component: {fileID: 199641777}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -592,6 +593,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   infoUI: {fileID: 2123428012}
   minhaCasa: {fileID: 331057038}
+  gerenciador: {fileID: 199641777}
+--- !u!114 &199641777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199641771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a173eb6b6ae502429c5cae56c149429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameTimeText: 
 --- !u!1 &204502248
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,21 +921,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb8e42feb5bd8df45a7e11d0254ef64d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalMadeira: 100
-  totalComida: 500
-  totalOuro: 0
-  meuFazendeiro: {fileID: 8361139281928771616, guid: 3dc8be92459e03842b734af647e022c8, type: 3}
-  qtdCasas: 1
-  totalVidaBoa: 0
-  gameTime: 0
-  gameTimeText: 
-  floresta: {fileID: 996882323}
-  carne: {fileID: 708156507}
-  lazer: {fileID: 1804100283}
-  minaOuro: {fileID: 221462280}
-  fazendeiros: []
-  profissoes: 00000000000000000000000000000000
-  infoUI: {fileID: 2123428012}
+  TotalMadeira: 100
+  TotalComida: 500
+  TotalbarraDeouro: 0
+  QtdCasas: 1
+  TotalVidaBoa: 0
+  trabalhadorCarne: 0
+  trabalhadorMadeira: 0
+  trabalhadorVidaboa: 0
+  trabralhadorMineiro: 0
+  MeuFazendeiro: {fileID: 8361139281928771616, guid: 3dc8be92459e03842b734af647e022c8, type: 3}
+  Fazendeiros: []
+  Floresta: {fileID: 996882323}
+  Carne: {fileID: 708156507}
+  Lazer: {fileID: 1804100283}
+  Ouro: {fileID: 221462280}
 --- !u!1 &372721935
 GameObject:
   m_ObjectHideFlags: 0

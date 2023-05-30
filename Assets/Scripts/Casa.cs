@@ -34,38 +34,83 @@ public class Casa : MonoBehaviour
 
     private void Start()
     {
-
         AlterarPosicaoFloresta();
         AlterarPosicaoCarne();
+
         //0 - madeira
+        CriarFazendeiro(0);
         //1 - carne
+        CriarFazendeiro(1);
+        CriarFazendeiro(1);
         //2 - vag
+        CriarFazendeiro(2);
         //3 - ouro
-        CriarFazendeiro(1);
-        CriarFazendeiro(1);
-        CriarFazendeiro(0);
         CriarFazendeiro(3);
-        CriarFazendeiro(0);
+    }
 
-
+    public void SetTimeScale(float value)
+    {
+        if (Time.timeScale != 0)
+        {
+            Time.timeScale = value;
+        }
     }
 
     private void Update()
     {
-        if (TotalComida > Fazendeiros.Count * 10 + 300)
-        {
-            CriarFazendeiro(1);
-            CriarFazendeiro(1);
-            CriarFazendeiro(1);
-            CriarFazendeiro(0);
-            CriarFazendeiro(2);
-        }
-        if (TotalMadeira > 150)
-        {
-            CriarCasa();
-        }
+        Thaliston();
+
         Consumo();
         AtualizarFazendeiros();
+    }
+
+    void Thaliston()
+    {
+        //Cria casa
+        if (TotalMadeira > 150 + (Fazendeiros.Count*5) && Fazendeiros.Count == (QtdCasas * 5))
+        {
+            TotalMadeira -= 100;
+            QtdCasas++;
+        }
+
+        //Cria fazendeiro
+        if (TotalComida > (Fazendeiros.Count * 2) + 100 && (QtdCasas * 5) > Fazendeiros.Count)
+        {
+            int tipo = Random.Range(0, 4);
+            Debug.Log("Randomiza");
+
+            if (TotalComida > TotalMadeira && trabalhadorVidaboa < trabalhadorCarne*3)
+            {
+                Debug.Log("Abundancia de comida");
+                //Abundancia de comida
+                //Cria Trabalhador Maraja
+                tipo = 2;
+            }
+            if (TotalMadeira >= TotalComida && trabralhadorMineiro <= trabalhadorMadeira)
+            {
+                Debug.Log("Abundancia de madeira");
+                //Abundancia de madeira
+                //Cria Trabalhador Mineirador
+                tipo = 3;
+            }
+
+            if (TotalComida < (Fazendeiros.Count * 2) + 75)
+            {
+                Debug.Log("Crise de comida");
+                //Crise de comida
+                //Cria Trabalhador Carne
+                tipo = 1;
+            }
+            else if (TotalMadeira < (Fazendeiros.Count * 3) + 50)
+            {
+                Debug.Log("Crise de madeira");
+                //Crise de madeira
+                //Cria Trabalhador Madeira
+                tipo = 0;
+            }
+
+            CriarFazendeiro(tipo);
+        }
     }
 
     void CriarFazendeiro(int escolhetipo)
@@ -87,15 +132,6 @@ public class Casa : MonoBehaviour
                 MeuF.GetComponent<Fazendeiro>().DefinirFuncao(escolhetipo);
                 DescobreTipos();
             }
-        }
-    }
-
-    void CriarCasa()
-    {
-        if (TotalMadeira > 100)
-        {
-            TotalMadeira = TotalMadeira - 100;
-            QtdCasas++;
         }
     }
 

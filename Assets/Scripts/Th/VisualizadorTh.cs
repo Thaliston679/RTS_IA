@@ -9,7 +9,7 @@ public class VisualizadorTh : MonoBehaviour
     public TextMeshProUGUI infoUI;
 
     //Onde pego as informações
-    public Casa minhaCasa;
+    public CasaTh minhaCasa;
 
     void Start()
     {
